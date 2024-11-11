@@ -30,6 +30,9 @@ export class User extends BaseEntity {
     @Column({ nullable: true, unique: true })
     public email?: string;
 
+    @Column({ type: 'bigint', nullable: true })
+    public telegram_id?: number;
+
     @Column({ type: 'boolean', default: true, select: false })
     public is_active: boolean | true;
 

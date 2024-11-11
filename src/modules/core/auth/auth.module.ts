@@ -1,23 +1,21 @@
-import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { User } from 'src/database/entities';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { OtpModule } from 'src/imp/otp/otp.module';
+import { Global, Module } from '@nestjs/common';
+import { PhoneModule } from './phone/phone.module';
+import { TelegramModule } from './telegram/telegram.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TokenModule } from 'src/imp/token/token.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/database/entities';
 
+@Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
-    OtpModule,
     JwtModule.register({
       global: true,
       signOptions: { expiresIn: '7d' },
     }),
-    TokenModule
-  ],
-  controllers: [AuthController],
-  providers: [AuthService],
+    TypeOrmModule.forFeature([User]),
+    TokenModule,
+    PhoneModule,
+    TelegramModule]
 })
 export class AuthModule { }

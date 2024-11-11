@@ -8,7 +8,6 @@ import {
     Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { EntityMetadataNotFoundError } from 'typeorm';
 
 @Catch()
 export class ExceptionsFilter extends BaseExceptionFilter implements ExceptionFilter {
@@ -17,22 +16,28 @@ export class ExceptionsFilter extends BaseExceptionFilter implements ExceptionFi
     catch(exception: HttpException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        console.log(exception)
-        const status = exception.getStatus();
 
-        if (status === HttpStatus.UNPROCESSABLE_ENTITY) {
-            return response.status(status).json(exception.getResponse());
+        const httpStatus =
+            exception instanceof HttpException
+                ? exception.getStatus()
+                : HttpStatus.INTERNAL_SERVER_ERROR
+
+        if (httpStatus === HttpStatus.UNPROCESSABLE_ENTITY) {
+            return response.status(httpStatus).json(exception.getResponse());
         }
 
-        if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
+        if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
             this.logger.error(exception);
         }
 
-        return response.status(status).json({
-            status_code: status,
+        const responseBody = {
+            status_code: httpStatus,
             message: exception?.message,
             created_at: new Date().toISOString(),
-        });
+        }
+
+        return response.status(httpStatus).json(responseBody);
+
     }
 
 }

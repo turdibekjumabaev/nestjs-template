@@ -55,6 +55,11 @@ export class Users1731046369694 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'telegram_id',
+            type: 'bigint',
+            isNullable: true,
+          },
+          {
             name: 'is_active',
             type: 'boolean',
             default: true,

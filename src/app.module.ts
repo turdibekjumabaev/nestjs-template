@@ -8,8 +8,6 @@ import { OtpModule } from './imp/otp/otp.module';
 import { SmsModule } from './imp/sms/sms.module';
 import { JwtConfig, SmsConfig } from './common/configs';
 import { TokenModule } from './imp/token/token.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './database/entities';
 
 @Module({
   imports: [
