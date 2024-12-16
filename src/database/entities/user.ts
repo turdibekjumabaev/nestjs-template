@@ -1,10 +1,8 @@
-import { Exclude, Expose } from "class-transformer";
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { CustomBaseEntity } from "src/common/entities";
+import { Column, Entity } from "typeorm"
 
 @Entity({ name: 'users' })
-export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    public id: number;
+export class User extends CustomBaseEntity {
 
     @Column({ nullable: true })
     public first_name?: string;
@@ -32,18 +30,6 @@ export class User extends BaseEntity {
 
     @Column({ type: 'bigint', nullable: true })
     public telegram_id?: number;
-
-    @Column({ type: 'boolean', default: true, select: false })
-    public is_active: boolean | true;
-
-    @CreateDateColumn({ select: false })
-    public created_at: Date;
-
-    @UpdateDateColumn({ select: false })
-    public updated_at?: Date;
-
-    @DeleteDateColumn({ select: false })
-    public deleted_at?: Date;
 
     // @Expose()
     get avatar_url(): string | null {
