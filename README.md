@@ -97,29 +97,3 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
-
-BINARY SEARCH algoritimi qalay isleydi?
-
-Kelin algoritim qalay islewinen aldin ne ushin, qanday waqitta, qanday maxsette paydalaniwimiz kerek ekenligin aniqlastirip alamiz.
-
-Misali: Sizdin' dostinizdan soran 1-100ge shekem bolgan soni oylasin ham ol X sanin oyladi. X sandi tabiw ushin 1-100 ge shekem sandi sorawiniz mumkin. Oylap korin 1-100 shekem sorawda N waqit ham 100ge shekem kombinatsiya boladi bul biz ushin juda qiyin ham kop waqit aladi bizge ushi jerde Binary Search kerek boladi😅.
-
-
-siz guman qilgan san Y sani dosiniz oylagan X sannan ulken yaki kishi ekenin soray alasiz.
-
-
-post:2
-
-Binary Search algoritimi menen sheshim 🚀
-
-Dostiniz oylgan 1den 100ge shekem sannin ishinen X sanin tabiw ushin to'mendegishi qademlerden oteamiz
-1. Dostinizdan 50 sanidan ulken yaki kishi ekenin soraymiz
-2. Eger dostiniz oylagan san X sanin kishi bolsa 1den 50ge shekem sannin ishinen 25 sanidan ulken yaki kishi ekenin soraymiz
-3. Eger dostiniz oylagan san X sanin kishi bolsa 1den 25ge shekem sannin ishinen 13 sanidan ulken yaki kishi ekenin soraymiz
-4. Eger dostiniz oylagan san X sanin kishi bolsa 1den 12ge shekem sannin ishinen 7 sanidan ulken yaki kishi ekenin soraymiz
-5. Eger dostiniz oylagan san X sanin kishi bolsa 1den 6ge shekem sannin ishinen 4 sanidan ulken yaki kishi ekenin soraymiz
-6. Eger dostiniz oylagan san X sanin kishi bolsa 1den 3ge shekem sannin ishinen 2 sanidan ulken yaki kishi ekenin soraymiz
-7. Eger dostiniz oylagan san X sanin kishi bolsa 1den 2ge shekem sannin ishinen 1 sanidan ulken yaki kishi ekenin soraymiz
-
-Bul jerdi biz dosiniz oygan 1-100ge shekem sannin ishinen X sanin 7 qademde tabiw ushin Binary Search algoritimini ishletdik.🚀
