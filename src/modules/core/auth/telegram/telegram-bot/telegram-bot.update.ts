@@ -22,7 +22,7 @@ export class TelegramBotUpdate {
     private redisService: RedisService
   ) { }
 
-  private async generateAndSendOtp(phone, ctx: Context): Promise<void> {
+  private async generateAndSendOtp(ctx: Context): Promise<void> {
     const otpCode = generateOtpCode(6);
     await ctx.reply(
       `🔒 Code: \n\`\`\`${otpCode}\`\`\``,
@@ -39,34 +39,48 @@ export class TelegramBotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context): Promise<void> {
-    const text = `Hello ${ctx.from.first_name} 🚀 👋\nWelcome to the official bot of @qirikki\n\n⬇️ Send your contact (press the button)`;
+    const isExistUser = await this.userReposioty.findOneBy({ telegram_id: ctx.from.id })
+    if (!isExistUser) {
+      await this.userReposioty.create({
+        telegram_id: ctx.from.id,
+        first_name: ctx.from.first_name,
+        sur_name: ctx.from.last_name ?? null,
+      }).save()
 
-    await ctx.reply(text, Markup.keyboard([
-      [Markup.button.contactRequest('📞 Send Contact')]
-    ]).resize().oneTime());
-  }
+      const text = `Hello ${ctx.from.first_name} 🚀 👋\nWelcome to the official bot of @qirikki\n\n⬇️ Send your contact (press the button)`;
+      await ctx.reply(text, Markup.keyboard([
+        [Markup.button.contactRequest('📞 Send Contact')]
+      ]).resize().oneTime());
+    }
 
-  @Command('login')
-  async onLogin(@Ctx() ctx: Context): Promise<void> {
-    const user = await this.userReposioty.findOneBy({ telegram_id: ctx.chat.id })
     const existingOtp = await this.redisService.get(TELEGRAM_BOT_OTP_PREFIX + ctx.chat.id);
     if (existingOtp) {
       await ctx.reply('Your old code is still effective ☝️');
       return;
     }
-    await this.generateAndSendOtp(user.phone, ctx);
+
+    await this.generateAndSendOtp(ctx);
+  }
+
+  @Command('login')
+  async onLogin(@Ctx() ctx: Context): Promise<void> {
+    const existingOtp = await this.redisService.get(TELEGRAM_BOT_OTP_PREFIX + ctx.chat.id);
+    if (existingOtp) {
+      await ctx.reply('Your old code is still effective ☝️');
+      return;
+    }
+    await this.generateAndSendOtp(ctx);
   }
 
   @Action('refresh')
   async onRefresh(@Ctx() ctx: SceneContext & { update: CoreUpdate.CallbackQueryUpdate }): Promise<void> {
-    const user = await this.userReposioty.findOneBy({ telegram_id: ctx.chat.id })
     const existingOtp = await this.redisService.get(TELEGRAM_BOT_OTP_PREFIX + ctx.chat.id);
     if (existingOtp) {
       await ctx.answerCbQuery('Your old code is still effective ☝️', { show_alert: true });
       return;
     }
     await ctx.deleteMessage();
-    await this.generateAndSendOtp(user.phone, ctx);
+    await this.generateAndSendOtp(ctx);
   }
 
   @On('contact')
@@ -75,14 +89,9 @@ export class TelegramBotUpdate {
     const { phone_number } = ctx.message.contact;
     const isExistUser = await this.userReposioty.findOneBy({ telegram_id: ctx.from.id })
     if (!isExistUser) {
-      await this.userReposioty.create({
-        telegram_id: ctx.from.id,
-        first_name: ctx.from.first_name,
-        sur_name: ctx.from.last_name ?? null,
-        phone: phone_number
-      }).save()
+      await this.userReposioty.update({ telegram_id: ctx.from.id }, { phone: phone_number })
     }
-    await this.generateAndSendOtp(phone_number, ctx);
+    await this.generateAndSendOtp(ctx);
     await ctx.reply('🇺🇸🔑\nTo get a new code click /login');
   }
 }

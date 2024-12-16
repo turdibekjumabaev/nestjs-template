@@ -25,6 +25,7 @@ export class TelegramService {
         telegram_id: +isExistOtpAndGetTgId
       });
 
+      
       await this.redisService.delete(TELEGRAM_BOT_OTP_PREFIX + otpTelegramDto.code)
       await this.redisService.delete(TELEGRAM_BOT_OTP_PREFIX + user.telegram_id)
 
